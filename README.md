@@ -1,4 +1,4 @@
-# OverwatchSpinner
+# OverwatchProgress
 <img width="50%" src="https://raw.githubusercontent.com/zjywill/OverwatchSpinner/master/SampleImage/overwatch_new.gif">
 
 # Example
