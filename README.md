@@ -24,6 +24,6 @@ allprojects {
 ```
 ```
 dependencies {
-        compile 'com.github.zjywill:OverwatchSpinner:1.0'
+        compile 'com.github.zjywill:OverwatchProgress:1.0'
 }
 ```
