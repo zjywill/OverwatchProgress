@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="HiveProgressView">
+    <attr format="integer" name="hive_animDuration" />
+    <attr format="integer" name="hive_maxAlpha" />
+    <attr format="color" name="hive_color" />
+  </declare-styleable>
+</resources>
