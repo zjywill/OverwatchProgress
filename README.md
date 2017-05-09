@@ -1,4 +1,6 @@
 # OverwatchProgress
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-OverwatchProgress-blue.svg?style=flat)](https://android-arsenal.com/details/1/5722)   
+
 Have you ever played Overwatch and amazed by the beautiful loading view,  now you can use in your android application.  
 
 <img width="50%" src="https://raw.githubusercontent.com/zjywill/OverwatchProgress/master/SampleImage/overwatch_new.gif">
