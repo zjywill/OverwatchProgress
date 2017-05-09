@@ -4,5 +4,6 @@
     <attr format="integer" name="hive_animDuration" />
     <attr format="integer" name="hive_maxAlpha" />
     <attr format="color" name="hive_color" />
+    <attr format="boolean" name="hive_rainbow" />
   </declare-styleable>
 </resources>

@@ -17,7 +17,8 @@ Have you ever played Overwatch and amazed by the beautiful loading view,  now yo
     android:layout_gravity="center"
     app:hive_animDuration="5000" //animation duration
     app:hive_color="@color/colorAccent" //color of hexagon
-    app:hive_maxAlpha="255" //hexagon animation max alpha
+    app:hive_maxAlpha="255" //hexagon animation max alpha, from 0-255
+    app:hive_rainbow="true" //rainbow style
     />
 ```
 

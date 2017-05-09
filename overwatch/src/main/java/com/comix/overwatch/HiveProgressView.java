@@ -11,11 +11,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 public class HiveProgressView extends View {
+
+    private static final int[] rainbowColor = {
+        0xFF0000, 0xFF7F00, 0xFFFF00, 0x00FF00, 0x0000FF, 0x4B0082, 0x9400D3
+    };
 
     private static final int MAX_PROGRESS_VALUE = 1400;
     private static final int PROGRESS_TIME = 2000;
@@ -29,6 +32,7 @@ public class HiveProgressView extends View {
     private int maxAlpha = MAX_ALPHA;
     private int animationTime = PROGRESS_TIME;
     private int color;
+    private boolean rainbow;
 
     private AnimatorSet indeterminateAnimator;
 
@@ -55,10 +59,7 @@ public class HiveProgressView extends View {
         if (a.hasValue(R.styleable.HiveProgressView_hive_color)) {
             color = a.getColor(R.styleable.HiveProgressView_hive_color, Color.BLACK);
         }
-        Log.d("HiveProgressView", "animationTime: " + animationTime);
-        Log.d("HiveProgressView", "maxAlpha: " + maxAlpha);
-        Log.d("HiveProgressView", "color: " + color);
-
+        rainbow = a.getBoolean(R.styleable.HiveProgressView_hive_rainbow, false);
         a.recycle();
     }
 
@@ -153,31 +154,46 @@ public class HiveProgressView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         Path hexPath = hiveRect(hexWidth / 2, hexPadding, hexWidth * 3 / 2, hexHeight + hexPadding);
+        paint.setColor(getHexagonColor(1));
         paint.setAlpha(getAlpha(1, actualProgress));
         canvas.drawPath(hexPath, paint);
         hexPath = hiveRect(hexWidth * 3 / 2, hexPadding, hexWidth * 5 / 2, hexHeight + hexPadding);
+        paint.setColor(getHexagonColor(2));
         paint.setAlpha(getAlpha(2, actualProgress));
         canvas.drawPath(hexPath, paint);
         hexPath = hiveRect(0, hexHeight * 3 / 4 + hexPadding, hexWidth,
                            hexHeight * 7 / 4 + hexPadding);
+        paint.setColor(getHexagonColor(6));
         paint.setAlpha(getAlpha(6, actualProgress));
         canvas.drawPath(hexPath, paint);
         hexPath = hiveRect(hexWidth, hexHeight * 3 / 4 + hexPadding, hexWidth * 2,
                            hexHeight * 7 / 4 + hexPadding);
+        paint.setColor(getHexagonColor(7));
         paint.setAlpha(getAlpha(7, actualProgress));
         canvas.drawPath(hexPath, paint);
         hexPath = hiveRect(hexWidth * 2, hexHeight * 3 / 4 + hexPadding, hexWidth * 3,
                            hexHeight * 7 / 4 + hexPadding);
+        paint.setColor(getHexagonColor(3));
         paint.setAlpha(getAlpha(3, actualProgress));
         canvas.drawPath(hexPath, paint);
         hexPath = hiveRect(hexWidth / 2, hexHeight * 6 / 4 + hexPadding, hexWidth * 3 / 2,
                            hexHeight * 10 / 4 + hexPadding);
+        paint.setColor(getHexagonColor(5));
         paint.setAlpha(getAlpha(5, actualProgress));
         canvas.drawPath(hexPath, paint);
         hexPath = hiveRect(hexWidth * 3 / 2, hexHeight * 6 / 4 + hexPadding, hexWidth * 5 / 2,
                            hexHeight * 10 / 4 + hexPadding);
+        paint.setColor(getHexagonColor(4));
         paint.setAlpha(getAlpha(4, actualProgress));
         canvas.drawPath(hexPath, paint);
+    }
+
+    private int getHexagonColor(int position) {
+        if (rainbow && position <= rainbowColor.length) {
+            return rainbowColor[position - 1];
+        } else {
+            return color;
+        }
     }
 
     private int getAlpha(int num, float progress) {
