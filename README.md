@@ -19,6 +19,7 @@ Have you ever played Overwatch and amazed by the beautiful loading view,  now yo
     app:hive_color="@color/colorAccent" //color of hexagon
     app:hive_maxAlpha="255" //hexagon animation max alpha, from 0-255
     app:hive_rainbow="true" //rainbow style
+    app:hive_cornerRadius="20" //radius of the corner
     />
 ```
 
@@ -32,7 +33,7 @@ allprojects {
 ```
 ```
 dependencies {
-        compile 'com.github.zjywill:OverwatchProgress:1.2'
+        compile 'com.github.zjywill:OverwatchProgress:1.3'
 }
 ```
 

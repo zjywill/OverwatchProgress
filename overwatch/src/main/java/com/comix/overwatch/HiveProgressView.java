@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -33,6 +34,7 @@ public class HiveProgressView extends View {
     private int animationTime = PROGRESS_TIME;
     private int color;
     private boolean rainbow;
+    private int cornerRadius;
 
     private AnimatorSet indeterminateAnimator;
 
@@ -60,11 +62,13 @@ public class HiveProgressView extends View {
             color = a.getColor(R.styleable.HiveProgressView_hive_color, Color.BLACK);
         }
         rainbow = a.getBoolean(R.styleable.HiveProgressView_hive_rainbow, false);
+        cornerRadius = a.getInteger(R.styleable.HiveProgressView_hive_cornerRadius, 0);
         a.recycle();
     }
 
     private void initPaint() {
         paint.setAlpha(0);
+        paint.setPathEffect(new CornerPathEffect(cornerRadius));
         paint.setColor(color);
         paint.setStyle(Paint.Style.FILL);
         paint.setAntiAlias(true);
@@ -215,7 +219,7 @@ public class HiveProgressView extends View {
                 alpha = maxAlpha - alpha * maxAlpha / 100;
             }
         }
-        if(progress > 1400){
+        if (progress > 1400) {
             alpha = 0;
         }
         return (int) alpha;

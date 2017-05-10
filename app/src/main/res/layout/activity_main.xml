@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-
     android:orientation="vertical"
     tools:context="com.comix.demo.MainActivity"
     >
@@ -15,6 +14,7 @@
       android:layout_gravity="center"
       app:hive_animDuration="5000"
       app:hive_color="@color/colorAccent"
+      app:hive_cornerRadius="20"
       app:hive_maxAlpha="100"
       app:hive_rainbow="true"
       />

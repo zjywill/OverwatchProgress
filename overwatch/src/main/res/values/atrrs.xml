@@ -5,5 +5,6 @@
     <attr format="integer" name="hive_maxAlpha" />
     <attr format="color" name="hive_color" />
     <attr format="boolean" name="hive_rainbow" />
+    <attr format="integer" name="hive_cornerRadius" />
   </declare-styleable>
 </resources>
