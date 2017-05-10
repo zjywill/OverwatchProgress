@@ -20,7 +20,7 @@ public class HiveProgressView extends View {
         0xFF0000, 0xFF7F00, 0xFFFF00, 0x00FF00, 0x0000FF, 0x4B0082, 0x9400D3
     };
 
-    private static final int MAX_PROGRESS_VALUE = 1400;
+    private static final int MAX_PROGRESS_VALUE = 1450;
     private static final int PROGRESS_TIME = 2000;
     private static final int MAX_ALPHA = 70;
 
@@ -214,6 +214,9 @@ public class HiveProgressView extends View {
                 alpha = (fadeProgress - min) > 0 ? fadeProgress - min : 0;
                 alpha = maxAlpha - alpha * maxAlpha / 100;
             }
+        }
+        if(progress > 1400){
+            alpha = 0;
         }
         return (int) alpha;
     }
