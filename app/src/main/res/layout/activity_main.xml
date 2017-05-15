@@ -17,6 +17,7 @@
       app:hive_cornerRadius="20"
       app:hive_maxAlpha="100"
       app:hive_rainbow="true"
+      app:hive_shrink="true"
       />
 
 </FrameLayout>
