@@ -68,6 +68,54 @@ public class HiveProgressView extends View {
         a.recycle();
     }
 
+    public int getMaxAlpha() {
+        return maxAlpha;
+    }
+
+    public void setMaxAlpha(int maxAlpha) {
+        this.maxAlpha = maxAlpha;
+    }
+
+    public int getAnimationTime() {
+        return animationTime;
+    }
+
+    public void setAnimationTime(int animationTime) {
+        this.animationTime = animationTime;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public boolean isRainbow() {
+        return rainbow;
+    }
+
+    public void setRainbow(boolean rainbow) {
+        this.rainbow = rainbow;
+    }
+
+    public int getCornerRadius() {
+        return cornerRadius;
+    }
+
+    public void setCornerRadius(int cornerRadius) {
+        this.cornerRadius = cornerRadius;
+    }
+
+    public boolean isShrink() {
+        return shrink;
+    }
+
+    public void setShrink(boolean shrink) {
+        this.shrink = shrink;
+    }
+
     private void initPaint() {
         paint.setAlpha(0);
         paint.setPathEffect(new CornerPathEffect(cornerRadius));

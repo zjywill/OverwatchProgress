@@ -9,6 +9,7 @@
     >
 
   <com.comix.overwatch.HiveProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
+      android:id="@+id/hive_progress"
       android:layout_width="192dp"
       android:layout_height="192dp"
       android:layout_gravity="center"

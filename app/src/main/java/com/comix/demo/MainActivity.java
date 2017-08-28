@@ -1,13 +1,18 @@
 package com.comix.demo;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import com.comix.overwatch.HiveProgressView;
+
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        HiveProgressView progressView = (HiveProgressView) findViewById(R.id.hive_progress);
+        progressView.setRainbow(false);
+        progressView.setColor(0x000000);
     }
 }
