@@ -35,7 +35,7 @@ allprojects {
 ```
 ```
 dependencies {
-        compile 'com.github.zjywill:OverwatchProgress:1.4'
+        compile 'com.github.zjywill:OverwatchProgress:1.5'
 }
 ```
 
