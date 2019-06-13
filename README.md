@@ -22,6 +22,7 @@ Have you ever played Overwatch and amazed by the beautiful loading view,  now yo
     app:hive_rainbow="true" //rainbow style
     app:hive_cornerRadius="20" //radius of the corner
     app:hive_shrink="true" //shrink the hexagon
+    app:hive_image="@drawable/cat" //NEW any image resource you like
     />
 ```
 
@@ -35,7 +36,7 @@ allprojects {
 ```
 ```
 dependencies {
-        compile 'com.github.zjywill:OverwatchProgress:1.5'
+        compile 'com.github.zjywill:OverwatchProgress:1.6'
 }
 ```
 
