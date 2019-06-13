@@ -7,5 +7,6 @@
     <attr format="boolean" name="hive_rainbow" />
     <attr format="integer" name="hive_cornerRadius" />
     <attr format="boolean" name="hive_shrink" />
+    <attr format="integer" name="hive_image" />
   </declare-styleable>
 </resources>
