@@ -43,16 +43,20 @@ dependencyResolutionManagement {
 In the module's `build.gradle.kts`:
 ```kotlin
 dependencies {
-  implementation("com.github.zjywill:OverwatchProgress:2.0.0")
+  // Views
+  implementation("com.github.zjywill.OverwatchProgress:overwatch:2.1.0")
+  // Compose — pulls in the line above transitively
+  implementation("com.github.zjywill.OverwatchProgress:overwatch-compose:2.1.0")
 }
 ```
 
-Check the [JitPack page](https://jitpack.io/#zjywill/OverwatchProgress) for the coordinates of the
-newest release: `2.1.0` adds a second artifact for the Compose API, and JitPack names artifacts
-differently once a repository publishes more than one module.
-
-> The coordinate is unchanged from `1.6`, so upgrading is a version bump. `2.0.0` requires JDK 17
-> and raises `minSdk` to 24.
+> **Upgrading from 2.0.0 or earlier:** the coordinate changed, not just the version. Releases up to
+> `2.0.0` shipped as the single artifact `com.github.zjywill:OverwatchProgress`. From `2.1.0` the
+> repository publishes two modules, so JitPack groups them under
+> `com.github.zjywill.OverwatchProgress` and names each artifact after its module. Replace the whole
+> line rather than bumping the version.
+>
+> `2.0.0` also requires JDK 17 and raises `minSdk` to 24.
 
 # Compose
 
