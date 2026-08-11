@@ -2,7 +2,7 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-OverwatchProgress-blue.svg?style=flat)](https://android-arsenal.com/details/1/5722)
 [![](https://jitpack.io/v/zjywill/OverwatchProgress.svg)](https://jitpack.io/#zjywill/OverwatchProgress)
 [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
-[![API](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=14)  
+[![API](https://img.shields.io/badge/API-24%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=24)  
 
 Have you ever played Overwatch and amazed by the beautiful loading view,  now you can use in your android application.  
 
@@ -22,22 +22,47 @@ Have you ever played Overwatch and amazed by the beautiful loading view,  now yo
     app:hive_rainbow="true" //rainbow style
     app:hive_cornerRadius="20" //radius of the corner
     app:hive_shrink="true" //shrink the hexagon
-    app:hive_image="@drawable/cat" //NEW any image resource you like
+    app:hive_image="@drawable/cat" //any image resource you like
+    app:hive_spacing="8dp" //NEW gap between hexagons, omit for a size-proportional default
     />
 ```
 
 # Installation
-```
-allprojects {
+
+In `settings.gradle.kts`:
+```kotlin
+dependencyResolutionManagement {
   repositories {
-    maven { url 'https://jitpack.io' }
+    google()
+    mavenCentral()
+    maven { url = uri("https://jitpack.io") }
   }
 }
 ```
-```
+
+In the module's `build.gradle.kts`:
+```kotlin
 dependencies {
-        compile 'com.github.zjywill:OverwatchProgress:1.6'
+  implementation("com.github.zjywill.OverwatchProgress:overwatch:2.0.0")
 }
+```
+
+> Versions up to `1.6` were published as `com.github.zjywill:OverwatchProgress:1.6`. Requires JDK 17
+> and `minSdk 24` from `2.0.0` onwards.
+
+# Spacing
+
+`hive_spacing` is the gap between two neighbouring hexagons, and it applies uniformly in all six
+directions — the cells hold *relative* comb coordinates, and the gap propagates through the
+horizontal pitch (`√3·r + spacing`) and the row step (`1.5·r + √3·spacing/2`). The hexagons shrink
+to absorb the gap, so the comb always fits the view.
+
+It can also be driven at runtime:
+
+```java
+hiveProgressView.setSpacingDp(12);  // dp
+hiveProgressView.setSpacing(30f);   // raw pixels
+hiveProgressView.setSpacing(-1f);   // back to the size-proportional default
 ```
 
 # License

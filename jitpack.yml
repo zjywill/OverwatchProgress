@@ -1,0 +1,5 @@
+# JitPack defaults to OpenJDK 8, which cannot run Android Gradle Plugin 9.
+# The build command is left to JitPack so that it keeps injecting -Pgroup / -Pversion itself.
+before_install:
+  - sdk install java 21-open
+  - sdk use java 21-open
