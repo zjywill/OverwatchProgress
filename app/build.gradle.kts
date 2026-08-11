@@ -1,5 +1,6 @@
 plugins {
   alias(libs.plugins.android.application)
+  alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -12,6 +13,10 @@ android {
     targetSdk = libs.versions.targetSdk.get().toInt()
     versionCode = 1
     versionName = "1.0"
+  }
+
+  buildFeatures {
+    compose = true
   }
 
   buildTypes {
@@ -29,4 +34,13 @@ android {
 
 dependencies {
   implementation(project(":overwatch"))
+  implementation(project(":overwatch-compose"))
+
+  implementation(platform(libs.compose.bom))
+  implementation(libs.compose.ui)
+  implementation(libs.compose.foundation)
+  implementation(libs.compose.material3)
+  implementation(libs.compose.ui.tooling.preview)
+  implementation(libs.activity.compose)
+  debugImplementation(libs.compose.ui.tooling)
 }

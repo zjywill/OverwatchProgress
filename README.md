@@ -47,8 +47,36 @@ dependencies {
 }
 ```
 
+Check the [JitPack page](https://jitpack.io/#zjywill/OverwatchProgress) for the coordinates of the
+newest release: `2.1.0` adds a second artifact for the Compose API, and JitPack names artifacts
+differently once a repository publishes more than one module.
+
 > The coordinate is unchanged from `1.6`, so upgrading is a version bump. `2.0.0` requires JDK 17
 > and raises `minSdk` to 24.
+
+# Compose
+
+```kotlin
+HiveProgress(
+  modifier = Modifier.size(160.dp),
+  colors = HiveProgressDefaults.Rainbow,
+  spacing = 8.dp,
+  cornerRadius = 6.dp,
+  shrink = true,
+)
+```
+
+There is also a stateless overload that takes the wave position instead of animating itself, which
+is what makes the comb a pure function of its arguments — useful for screenshot tests, or for
+driving the wave from your own animation:
+
+```kotlin
+HiveProgress(progress = 420f, modifier = Modifier.size(160.dp))
+```
+
+Both renderers share [`HiveGeometry`](overwatch/src/main/java/com/comix/overwatch/HiveGeometry.java),
+so the comb layout and the fade wave cannot drift apart between them. The Compose version reports
+itself as an indeterminate progress indicator to accessibility services.
 
 # Spacing
 

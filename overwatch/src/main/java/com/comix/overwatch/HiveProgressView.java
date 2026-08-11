@@ -16,48 +16,19 @@ import android.view.animation.LinearInterpolator;
 
 public class HiveProgressView extends View {
 
-  /** Number of hexagons in the 2-3-2 comb. */
-  private static final int HEX_COUNT = 7;
-
-  private static final float SQRT_3 = (float) Math.sqrt(3);
-
   private static final int[] RAINBOW_COLOR = {
     0xFFFF0000, 0xFFFF7F00, 0xFFFFFF00, 0xFF00FF00, 0xFF0000FF, 0xFF4B0082, 0xFF9400D3
   };
 
-  /**
-   * Cells are stored as top-left, top-right, mid-left, mid-centre, mid-right, bottom-left,
-   * bottom-right. Column offsets are counted in <em>half</em> a horizontal pitch so the staggered
-   * rows stay integral.
-   */
-  private static final int[] CELL_HALF_COLUMN = {-1, 1, -2, 0, 2, -1, 1};
-
-  private static final int[] CELL_ROW = {0, 0, 1, 1, 1, 2, 2};
-
-  /** Position of each cell in the fade wave, preserving the original Overwatch ordering. */
-  private static final int[] CELL_WAVE_ORDER = {1, 2, 6, 7, 3, 5, 4};
-
-  /** Per-cell tilt applied in image mode, in degrees. */
-  private static final float[] CELL_IMAGE_TILT = {10, -10, -10, 5, -10, 20, 10};
-
-  private static final int MAX_PROGRESS_VALUE = 1450;
   private static final int PROGRESS_TIME = 2000;
   private static final int MAX_ALPHA = 70;
   private static final int DEFAULT_SIZE_DP = 96;
 
-  /**
-   * Fraction of the content box used as the gap when {@link #hive_spacing} is not supplied. Chosen
-   * to reproduce the gap this view had before spacing became configurable.
-   */
-  private static final float AUTO_SPACING_RATIO = 1f / 23f;
-
-  /** Progress value at which every hexagon is fully faded in; used for layout previews. */
-  private static final float PREVIEW_PROGRESS = 700f;
-
   private final Paint paint = new Paint();
-  private final Path[] hexPaths = new Path[HEX_COUNT];
-  private final float[] cellX = new float[HEX_COUNT];
-  private final float[] cellY = new float[HEX_COUNT];
+  private final Path[] hexPaths = new Path[HiveGeometry.HEX_COUNT];
+  private final float[] cellX = new float[HiveGeometry.HEX_COUNT];
+  private final float[] cellY = new float[HiveGeometry.HEX_COUNT];
+  private final float[] vertices = new float[12];
 
   private float hexRadius;
   private float actualProgress = 0;
@@ -85,14 +56,14 @@ public class HiveProgressView extends View {
 
   public HiveProgressView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
-    for (int i = 0; i < HEX_COUNT; i++) {
+    for (int i = 0; i < HiveGeometry.HEX_COUNT; i++) {
       hexPaths[i] = new Path();
     }
     initAttributes(attrs, defStyle);
     initPaint();
     initImage();
     if (isInEditMode()) {
-      actualProgress = PREVIEW_PROGRESS;
+      actualProgress = HiveGeometry.FULLY_VISIBLE_PROGRESS;
     }
   }
 
@@ -242,7 +213,7 @@ public class HiveProgressView extends View {
 
   private void startAnimation() {
     if (isInEditMode()) {
-      actualProgress = PREVIEW_PROGRESS;
+      actualProgress = HiveGeometry.FULLY_VISIBLE_PROGRESS;
       invalidate();
       return;
     }
@@ -259,7 +230,7 @@ public class HiveProgressView extends View {
 
   private void resetAnimator() {
     stopAnimation();
-    ValueAnimator animator = ValueAnimator.ofFloat(0, MAX_PROGRESS_VALUE);
+    ValueAnimator animator = ValueAnimator.ofFloat(0, HiveGeometry.MAX_PROGRESS);
     animator.setDuration(animationTime);
     animator.setInterpolator(new LinearInterpolator());
     // Looping via the animator itself rather than restarting from onAnimationEnd: the old
@@ -317,20 +288,14 @@ public class HiveProgressView extends View {
       return;
     }
 
-    float gap = spacing >= 0 ? spacing
-                             : Math.min(contentWidth, contentHeight) * AUTO_SPACING_RATIO;
-    float radiusFromWidth = (contentWidth - 2 * gap) / (3 * SQRT_3);
-    float radiusFromHeight = (contentHeight - SQRT_3 * gap) / 5f;
-    hexRadius = Math.max(0f, Math.min(radiusFromWidth, radiusFromHeight));
+    float gap = spacing >= 0 ? spacing : HiveGeometry.autoSpacing(contentWidth, contentHeight);
+    hexRadius = HiveGeometry.radiusFor(contentWidth, contentHeight, gap);
 
-    float pitch = SQRT_3 * hexRadius + gap;
-    float rowStep = 1.5f * hexRadius + SQRT_3 * gap / 2f;
     float originX = getPaddingLeft() + contentWidth / 2f;
     float originY = getPaddingTop() + contentHeight / 2f;
-
-    for (int i = 0; i < HEX_COUNT; i++) {
-      cellX[i] = originX + CELL_HALF_COLUMN[i] * pitch / 2f;
-      cellY[i] = originY + (CELL_ROW[i] - 1) * rowStep;
+    for (int i = 0; i < HiveGeometry.HEX_COUNT; i++) {
+      cellX[i] = HiveGeometry.cellCenterX(i, originX, hexRadius, gap);
+      cellY[i] = HiveGeometry.cellCenterY(i, originY, hexRadius, gap);
     }
   }
 
@@ -347,9 +312,9 @@ public class HiveProgressView extends View {
   }
 
   private void drawHexagons(Canvas canvas) {
-    for (int i = 0; i < HEX_COUNT; i++) {
-      int wave = CELL_WAVE_ORDER[i];
-      int alpha = getCellAlpha(wave, actualProgress);
+    for (int i = 0; i < HiveGeometry.HEX_COUNT; i++) {
+      int wave = HiveGeometry.waveOrder(i);
+      int alpha = HiveGeometry.alphaAt(wave, actualProgress, maxAlpha);
       if (alpha <= 0) {
         continue;
       }
@@ -362,14 +327,14 @@ public class HiveProgressView extends View {
   }
 
   private void drawImages(Canvas canvas) {
-    float halfWidth = hexRadius * SQRT_3 / 2f;
-    for (int i = 0; i < HEX_COUNT; i++) {
-      int alpha = getCellAlpha(CELL_WAVE_ORDER[i], actualProgress);
+    float halfWidth = HiveGeometry.halfWidth(hexRadius);
+    for (int i = 0; i < HiveGeometry.HEX_COUNT; i++) {
+      int alpha = HiveGeometry.alphaAt(HiveGeometry.waveOrder(i), actualProgress, maxAlpha);
       if (alpha <= 0) {
         continue;
       }
       canvas.save();
-      canvas.rotate(CELL_IMAGE_TILT[i], cellX[i], cellY[i]);
+      canvas.rotate(HiveGeometry.imageTilt(i), cellX[i], cellY[i]);
       imageRes.setBounds(Math.round(cellX[i] - halfWidth), Math.round(cellY[i] - hexRadius),
                          Math.round(cellX[i] + halfWidth), Math.round(cellY[i] + hexRadius));
       imageRes.setAlpha(alpha);
@@ -386,41 +351,14 @@ public class HiveProgressView extends View {
     }
   }
 
-  private int getCellAlpha(int num, float progress) {
-    float alpha;
-    if (progress > num * 100) {
-      alpha = maxAlpha;
-    } else {
-      int min = (num - 1) * 100;
-      alpha = (progress - min) > 0 ? progress - min : 0;
-      alpha = alpha * maxAlpha / 100;
-    }
-    if (progress > 700) {
-      float fadeProgress = progress - 700;
-      if (fadeProgress > num * 100) {
-        alpha = 0;
-      } else {
-        int min = (num - 1) * 100;
-        alpha = (fadeProgress - min) > 0 ? fadeProgress - min : 0;
-        alpha = maxAlpha - alpha * maxAlpha / 100;
-      }
-    }
-    if (progress > 1400) {
-      alpha = 0;
-    }
-    return (int) alpha;
-  }
-
   /** Builds a pointy-top hexagon of circumradius {@code r} centred on ({@code cx}, {@code cy}). */
   private void buildHexPath(Path path, float cx, float cy, float r) {
-    float edge = r * SQRT_3 / 2f;
+    HiveGeometry.hexagonVertices(cx, cy, r, vertices);
     path.reset();
-    path.moveTo(cx, cy - r);
-    path.lineTo(cx + edge, cy - r / 2f);
-    path.lineTo(cx + edge, cy + r / 2f);
-    path.lineTo(cx, cy + r);
-    path.lineTo(cx - edge, cy + r / 2f);
-    path.lineTo(cx - edge, cy - r / 2f);
+    path.moveTo(vertices[0], vertices[1]);
+    for (int v = 2; v < vertices.length; v += 2) {
+      path.lineTo(vertices[v], vertices[v + 1]);
+    }
     path.close();
   }
 }

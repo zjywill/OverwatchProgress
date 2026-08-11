@@ -50,3 +50,7 @@ publishing {
     }
   }
 }
+
+dependencies {
+  testImplementation(libs.junit)
+}

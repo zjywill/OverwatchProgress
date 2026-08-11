@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v5
+
+      # Catches the class of breakage that left master unbuildable between 1.6 and 2.0.0:
+      # assemble every module, then run lint and the unit tests.
+      - name: Assemble
+        run: ./gradlew assembleDebug assembleRelease --stacktrace
+
+      - name: Lint
+        run: ./gradlew lint --stacktrace
+
+      - name: Unit tests
+        run: ./gradlew testDebugUnitTest --stacktrace
+
+      - name: Screenshot tests
+        run: ./gradlew verifyRoborazziDebug --stacktrace
+
+      # Roborazzi goldens are recorded on the maintainer's machine; if the Linux renderer
+      # disagrees, the diffs are the fastest way to see whether it is a real regression.
+      - name: Upload screenshot diffs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: roborazzi-diffs
+          path: |
+            **/build/outputs/roborazzi/**
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Upload lint reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-reports
+          path: '**/build/reports/lint-results-*.html'
+          if-no-files-found: ignore
+          retention-days: 7
+
+  publish-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v5
+
+      # JitPack builds tags with -Pgroup/-Pversion injected. Exercising the same path here means a
+      # broken release is caught before the tag is cut, not after.
+      - name: Publish to Maven local as JitPack would
+        run: |
+          ./gradlew publishToMavenLocal \
+            -Pgroup=com.github.zjywill -Pversion=0.0.0-ci --stacktrace
+
+      - name: Show published artifacts
+        run: find ~/.m2/repository/com/github/zjywill -type f | sort
