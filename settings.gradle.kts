@@ -22,4 +22,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "OverwatchProgress"
 
-include(":app", ":overwatch")
+include(":app", ":overwatch", ":overwatch-compose")
