@@ -43,12 +43,12 @@ dependencyResolutionManagement {
 In the module's `build.gradle.kts`:
 ```kotlin
 dependencies {
-  implementation("com.github.zjywill.OverwatchProgress:overwatch:2.0.0")
+  implementation("com.github.zjywill:OverwatchProgress:2.0.0")
 }
 ```
 
-> Versions up to `1.6` were published as `com.github.zjywill:OverwatchProgress:1.6`. Requires JDK 17
-> and `minSdk 24` from `2.0.0` onwards.
+> The coordinate is unchanged from `1.6`, so upgrading is a version bump. `2.0.0` requires JDK 17
+> and raises `minSdk` to 24.
 
 # Spacing
 
