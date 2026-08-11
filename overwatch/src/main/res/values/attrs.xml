@@ -7,6 +7,8 @@
     <attr format="boolean" name="hive_rainbow" />
     <attr format="integer" name="hive_cornerRadius" />
     <attr format="boolean" name="hive_shrink" />
-    <attr format="integer" name="hive_image" />
+    <attr format="reference" name="hive_image" />
+    <!-- Gap between neighbouring hexagons. Omit for a size-proportional default. -->
+    <attr format="dimension" name="hive_spacing" />
   </declare-styleable>
 </resources>

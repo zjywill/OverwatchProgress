@@ -1,0 +1,9 @@
+[versions]
+agp = "9.3.1"
+compileSdk = "36"
+targetSdk = "36"
+minSdk = "24"
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
